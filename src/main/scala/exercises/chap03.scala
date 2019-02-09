@@ -198,8 +198,8 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   def main13(args: Array[String]) {
     def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B): B = {
-      foldLeft(foldLeft[A, List[A]](as, Nil: List[A])((a, b) => Cons(b, a)), z)(
-        (a, b) => f(b, a))
+      foldLeft(foldLeft[A, List[A]](as, Nil: List[A])((b, a) => Cons(a, b)), z)(
+        (b, a) => f(a, b))
     }
     def sum(ns: List[Int]) =
       foldRight2(ns, 0)((x, y) => x + y)
@@ -207,8 +207,9 @@ object List { // `List` companion object. Contains functions for creating and wo
     println(sum(List(1, 2, 3)) == 6)
 
     def foldLeft2[A, B](as: List[A], z: B)(f: (A, B) => B): B = {
-      foldRight(foldRight[A, List[A]](as, Nil: List[A])((a, b) => Cons(a, b)),
-                z)((a, b) => f(a, b))
+      foldRight(
+        foldRight[A, List[A]](as, Nil: List[A])((a, b) => append(b, List(a))),
+        z)((a, b) => f(a, b))
     }
     def prod(l: List[Int]): Int = {
       foldLeft2[Int, Int](l, 1)((a, b) => a * b)
